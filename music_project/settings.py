@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     # my apps
     'login_app',
+    'sounds_app'
 ]
 
 MIDDLEWARE = [
@@ -91,6 +92,8 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
+# custom user
+AUTH_USER_MODEL = 'sounds_app.UserProfile'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
