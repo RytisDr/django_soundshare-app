@@ -45,10 +45,8 @@ INSTALLED_APPS = [
     'rest_auth',
     'allauth',
     'allauth.account',
-    'rest_auth.registration',
 
     # my apps
-    'login_app',
     'sounds_app'
 ]
 

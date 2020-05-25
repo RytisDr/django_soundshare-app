@@ -1,4 +1,5 @@
 notes.md
 .vscode
 __pycache__
-d.sqlite3
+db.sqlite3
+settings.py
