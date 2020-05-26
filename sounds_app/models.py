@@ -1,3 +1,4 @@
+from secrets import token_urlsafe
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .managers import CustomUserManager
@@ -21,11 +22,14 @@ class UserProfile(AbstractUser):
     indexes = [models.Index(fields=['username'])]
 
     def __str__(self):
-        return self.email
+        return f"{self.email} - {self.username}"
 
 
 class SoundFile(models.Model):
     file_path = models.CharField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.file_path
 
 
 class Sound(models.Model):
@@ -35,6 +39,9 @@ class Sound(models.Model):
     file = models.OneToOneField(
         SoundFile, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.title} - {self.uploaded_by} -{self.file}"
+
 
 class Favorites(models.Model):
     user = models.OneToOneField(
@@ -42,8 +49,24 @@ class Favorites(models.Model):
     sound = models.OneToOneField(
         Sound, on_delete=models.CASCADE, related_name='favorites')
 
+    def __str__(self):
+        return f"{self.user} - {self.sound}"
+
 
 class Genre(models.Model):
     sound = models.ForeignKey(
         Sound, on_delete=models.SET_NULL, null=True, related_name='genres')
     genre_name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.sound} - {self.genre_name}"
+
+
+class PasswordResetRequest(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    token = models.CharField(max_length=43, default=token_urlsafe)
+    created_timestamp = models.DateTimeField(auto_now_add=True)
+    updated_timestamp = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.user} - {self.created_timestamp} - {self.updated_timestamp} - {self.token}'

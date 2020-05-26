@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+from .config import EMAIL_HOST as Host, EMAIL_PORT as Port, EMAIL_HOST_USER as EmailUser, EMAIL_HOST_PASSWORD as EmailPwd
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -20,13 +20,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# TO be changed in production
 SECRET_KEY = 'btg80@z$8we$fxd#5xjhem(3@v9s)$zjo!nt(5%p0wj(&0&b7x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Application definition
 
@@ -43,8 +45,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-    'allauth',
-    'allauth.account',
 
     # my apps
     'sounds_app'
@@ -124,6 +124,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+REST_AUTH_SERIALIZERS = {
+    'PASSWORD_RESET_SERIALIZER': 'sounds_app.api.serializers.PasswordResetSerializer',
+    # 'PASSWORD_RESET_CONFIRM_SERIALIZER': ['sounds_app.api.serializers.PasswordResetConfirmSerializer'],
+}
 # all-auth configuration
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
@@ -147,3 +151,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
+EMAIL_HOST = Host
+EMAIL_PORT = Port
+EMAIL_HOST_USER = EmailUser
+EMAIL_HOST_PASSWORD = EmailPwd
