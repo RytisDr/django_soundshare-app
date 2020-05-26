@@ -55,6 +55,18 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         return "Password has been reset."
 
 
+class DeleteUserSerializer(serializers.Serializer):
+    class Meta:
+        model = UserProfile
+
+    def delete(self):
+        user = None
+        user = self.context.get("user")
+        account = UserProfile.objects.get(email=user.email)
+        account.delete()
+        return "Account deleted."
+
+
 class PostSoundSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sound

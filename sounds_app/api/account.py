@@ -1,10 +1,11 @@
 
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from . serializers import RegistrationSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from . serializers import RegistrationSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer, DeleteUserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from .. models import UserProfile, PasswordResetRequest
+from rest_framework.authentication import SessionAuthentication
 
 
 @api_view(['POST'])
@@ -61,4 +62,22 @@ def password_reset_confirm(request):
     else:
         data = serializer.errors
 
+    return Response(data)
+
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_account(request, format=None):
+    serializer = DeleteUserSerializer(
+        data=request.data, context={'user': request.user})
+    data = {}
+    if serializer.is_valid():
+        try:
+            serializer.delete()
+            return Response("Account removed.")
+        except:
+            return Response("Cannot delete.")
+    else:
+        data = serializer.errors
     return Response(data)
