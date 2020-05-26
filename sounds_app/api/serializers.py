@@ -41,8 +41,18 @@ class PasswordResetSerializer(serializers.Serializer):
         return "Check your email for password reset."
 
 
-class PasswordResetConfirmSerializer(serializers.ModelSerializer):
-    pass
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    token = serializers.CharField(max_length=43)
+    newPassword = serializers.CharField(write_only=True, min_length=8)
+
+    def save(self):
+        account = UserProfile.objects.get(email=self.validated_data['email'])
+        newPassword = self.validated_data['newPassword']
+        account.set_password(newPassword)
+        account.save()
+
+        return "Password has been reset."
 
 
 class PostSoundSerializer(serializers.ModelSerializer):

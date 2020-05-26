@@ -45,10 +45,20 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'django_rq',
 
     # my apps
     'sounds_app'
 ]
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': '6379',
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    }
+}
 
 SITE_ID = 1
 MIDDLEWARE = [

@@ -2,6 +2,5 @@ notes.md
 .vscode
 __pycache__
 db.sqlite3
-settings.py
 config.py
 Vagrantfile
