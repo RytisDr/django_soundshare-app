@@ -5,6 +5,7 @@ from .. messaging import email_message
 import django_rq
 import os
 import uuid
+from django.db import transaction
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -75,7 +76,13 @@ class PostSoundSerializer(serializers.ModelSerializer):
         fields = ['title']
 
     def save(self):
-        return "Saved"
+        user = None
+        user = self.context.get("user")
+        title = self.validated_data['title']
+        file_obj = self.context.get("file")
+        model = Sound(title=title, uploaded_by=user, sound_file=file_obj)
+        model.save()
+        return "Sound has been saved."
 
 
 class SoundFileSerializer(serializers.ModelSerializer):
@@ -93,4 +100,4 @@ class SoundFileSerializer(serializers.ModelSerializer):
         model = SoundFile(file=file_obj, file_name=file_name_uuid,
                           file_format=file_format)
         model.save()
-        return model.id
+        return model

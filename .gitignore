@@ -6,3 +6,4 @@ config.py
 Vagrantfile
 .vagrant/
 sounds
+migrations

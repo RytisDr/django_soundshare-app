@@ -22,7 +22,7 @@ def get_single_sound(request):
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def post_sound(request, format=None):
     fileSerializer = SoundFileSerializer(data=request.data)
@@ -39,13 +39,14 @@ def post_sound(request, format=None):
                 if fileExtension != '.mp3':
                     data = "Wrong file format, only .mp3 is allowed."
                 else:
-                    soundFileId = fileSerializer.save()
-            if soundFileId:
-                soundPostSerializer = PostSoundSerializer(data=request.data)
+                    soundFile = fileSerializer.save()
+            if soundFile:
+                soundPostSerializer = PostSoundSerializer(
+                    data=request.data, context={'user': request.user, 'file': soundFile})
                 if soundPostSerializer.is_valid():
-                    soundTitle = request.data['title']
-                    data = soundTitle
-            # else:
+                    data = soundPostSerializer.save()
+                else:
+                    data = soundPostSerializer.errors
     else:
         data = fileSerializer.errors
 

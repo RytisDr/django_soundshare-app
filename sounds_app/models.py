@@ -12,7 +12,7 @@ class Image(models.Model):
 class UserProfile(AbstractUser):
     email = models.EmailField(verbose_name='email',
                               unique=True, max_length=100)
-    username = models.CharField(blank=True, max_length=25)
+    username = models.CharField(max_length=25)
     description = models.TextField(blank=True, null=True)
     profile_image = models.OneToOneField(
         Image, on_delete=models.SET_NULL, null=True)
@@ -28,20 +28,20 @@ class UserProfile(AbstractUser):
 
 
 class SoundFile(models.Model):
-    file_format = models.CharField(max_length=5)
-    file_name = models.CharField(max_length=50, unique=True)
-    file = models.FileField(upload_to='sounds', default=None)
+    file_format = models.CharField(max_length=5, null=False)
+    file_name = models.CharField(max_length=50, unique=True, null=False)
+    file = models.FileField(upload_to='sounds', default=None, null=False)
 
     def __str__(self):
         return f"{self.id} --- {self.file_name}"
 
 
 class Sound(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, null=False)
     uploaded_by = models.ForeignKey(
-        UserProfile, on_delete=models.CASCADE, related_name='user_uploads')
-    file_id = models.OneToOneField(
-        SoundFile, on_delete=models.CASCADE)
+        UserProfile, on_delete=models.CASCADE, related_name='user_uploads', null=False)
+    sound_file = models.OneToOneField(
+        SoundFile, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         return f"{self.title} - {self.uploaded_by}"
