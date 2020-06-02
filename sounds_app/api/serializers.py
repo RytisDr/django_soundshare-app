@@ -3,6 +3,8 @@ from rest_framework import serializers
 from .. models import UserProfile, Sound, SoundFile, PasswordResetRequest
 from .. messaging import email_message
 import django_rq
+import os
+import uuid
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -70,10 +72,25 @@ class DeleteUserSerializer(serializers.Serializer):
 class PostSoundSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sound
-        fields = ['title', 'file']
+        fields = ['title']
+
+    def save(self):
+        return "Saved"
 
 
 class SoundFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = SoundFile
-        fields = ['file_path']
+        fields = ['file']
+
+    def save(self):
+        file_name_original = self.validated_data['file'].name
+        file_format = os.path.splitext(file_name_original)[1]
+        file_name_uuid = uuid.uuid4().hex + file_format
+        self.validated_data['file'].name = file_name_uuid + file_format
+        file_obj = self.validated_data['file']
+
+        model = SoundFile(file=file_obj, file_name=file_name_uuid,
+                          file_format=file_format)
+        model.save()
+        return model.id

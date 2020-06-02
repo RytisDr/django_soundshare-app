@@ -24,23 +24,27 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return f"{self.email} - {self.username}"
 
+    #file_name = models.CharField(max_length=200, unique=True)
+
 
 class SoundFile(models.Model):
-    file_path = models.CharField(max_length=200, unique=True)
+    file_format = models.CharField(max_length=5)
+    file_name = models.CharField(max_length=50, unique=True)
+    file = models.FileField(upload_to='sounds', default=None)
 
     def __str__(self):
-        return self.file_path
+        return f"{self.id} --- {self.file_name}"
 
 
 class Sound(models.Model):
     title = models.CharField(max_length=200)
     uploaded_by = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='user_uploads')
-    file = models.OneToOneField(
+    file_id = models.OneToOneField(
         SoundFile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.title} - {self.uploaded_by} -{self.file}"
+        return f"{self.title} - {self.uploaded_by}"
 
 
 class Favorites(models.Model):
@@ -50,7 +54,7 @@ class Favorites(models.Model):
         Sound, on_delete=models.CASCADE, related_name='favorites')
 
     def __str__(self):
-        return f"{self.user} - {self.sound}"
+        return f"{self.user.id} - {self.sound}"
 
 
 class Genre(models.Model):

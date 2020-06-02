@@ -39,7 +39,7 @@ def password_reset(request):
     else:
         data = serializer.errors
 
-    return Response(data)
+    return Response({"response": data})
 
 
 @api_view(['POST'])
@@ -62,7 +62,7 @@ def password_reset_confirm(request):
     else:
         data = serializer.errors
 
-    return Response(data)
+    return Response({"response": data})
 
 
 @api_view(['POST'])

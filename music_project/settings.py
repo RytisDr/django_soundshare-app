@@ -61,6 +61,10 @@ RQ_QUEUES = {
 }
 
 SITE_ID = 1
+
+MEDIA_URL = '/sounds/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'sounds_app/')
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -10,3 +10,4 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(UserProfile, UserAdmin)
 admin.site.register(Sound)
 admin.site.register(PasswordResetRequest)
+admin.site.register(SoundFile)
