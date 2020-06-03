@@ -14,9 +14,7 @@ class LogVisitorsMiddleware:
             repeatedVisitor = IpAddresses.objects.get(
                 ip_address=client_ip_address)
             repeatedVisitor.save()
-            print("again")
         except:
-            print("new")
             newVisitor = IpAddresses()
             newVisitor.ip_address = client_ip_address
             newVisitor.save()
