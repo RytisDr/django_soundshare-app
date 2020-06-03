@@ -36,12 +36,21 @@ class SoundFile(models.Model):
         return f"{self.id} --- {self.file_name}"
 
 
+class Genre(models.Model):
+    genre_name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.genre_name
+
+
 class Sound(models.Model):
     title = models.CharField(max_length=200, null=False)
     uploaded_by = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='user_uploads', null=False)
     sound_file = models.OneToOneField(
         SoundFile, on_delete=models.CASCADE, null=False)
+    genres = models.ForeignKey(
+        Genre, null=True, on_delete=models.SET_NULL, related_name='sounds')
 
     def __str__(self):
         return f"{self.title} - {self.uploaded_by}"
@@ -55,15 +64,6 @@ class Favorites(models.Model):
 
     def __str__(self):
         return f"{self.user.id} - {self.sound}"
-
-
-class Genre(models.Model):
-    sound = models.ForeignKey(
-        Sound, on_delete=models.SET_NULL, null=True, related_name='genres')
-    genre_name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return f"{self.sound} - {self.genre_name}"
 
 
 class PasswordResetRequest(models.Model):

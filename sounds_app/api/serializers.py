@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .. models import UserProfile, Sound, SoundFile, PasswordResetRequest
+from .. models import UserProfile, Sound, SoundFile, PasswordResetRequest, Genre
 from .. messaging import email_message
 import django_rq
 import os
@@ -79,10 +79,12 @@ class PostSoundSerializer(serializers.ModelSerializer):
         user = None
         user = self.context.get("user")
         title = self.validated_data['title']
+        genre = self.context.get("genre")
         file_obj = self.context.get("file")
-        model = Sound(title=title, uploaded_by=user, sound_file=file_obj)
+        model = Sound(title=title, uploaded_by=user,
+                      sound_file=file_obj, genres=genre)
         model.save()
-        return "Sound has been saved."
+        return "Sound posted."
 
 
 class SoundFileSerializer(serializers.ModelSerializer):
@@ -101,3 +103,25 @@ class SoundFileSerializer(serializers.ModelSerializer):
                           file_format=file_format)
         model.save()
         return model
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ['genre_name']
+
+    def save(self):
+        genreName = self.validated_data['genre_name']
+        try:
+            existingGenre = Genre.objects.get(genre_name=genreName)
+            return existingGenre
+        except:
+            model = Genre(genre_name=genreName)
+            model.save()
+            return model
+
+
+class SoundsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sound
+        fields = ['']

@@ -1,7 +1,7 @@
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, parser_classes
-from .serializers import PostSoundSerializer, SoundFileSerializer
+from .serializers import PostSoundSerializer, SoundFileSerializer, SoundsSerializer, GenreSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.parsers import FormParser, MultiPartParser, MultiPartParserError
 from django.core.files.storage import FileSystemStorage
@@ -12,7 +12,9 @@ from django.db import transaction
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_sounds(request):
-    return Response("ALL sounds")
+    data = {}
+    #serializer = SoundsSerializer(data=required.data)
+    return Response(data)
 
 
 @api_view(['GET'])
@@ -41,8 +43,15 @@ def post_sound(request, format=None):
                 else:
                     soundFile = fileSerializer.save()
             if soundFile:
+                genreSerializer = GenreSerializer(
+                    data=request.data)
+                if genreSerializer.is_valid():
+                    genre = genreSerializer.save()
+                else:
+                    data = genreSerializer.errors
+            if genre:
                 soundPostSerializer = PostSoundSerializer(
-                    data=request.data, context={'user': request.user, 'file': soundFile})
+                    data=request.data, context={'user': request.user, 'file': soundFile, 'genre': genre})
                 if soundPostSerializer.is_valid():
                     data = soundPostSerializer.save()
                 else:

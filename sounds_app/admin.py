@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import UserProfile, SoundFile, Sound, PasswordResetRequest
+from .models import UserProfile, SoundFile, Sound, PasswordResetRequest, Genre
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -11,3 +11,4 @@ admin.site.register(UserProfile, UserAdmin)
 admin.site.register(Sound)
 admin.site.register(PasswordResetRequest)
 admin.site.register(SoundFile)
+admin.site.register(Genre)
