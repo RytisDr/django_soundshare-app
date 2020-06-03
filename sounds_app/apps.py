@@ -5,4 +5,4 @@ class SoundsAppConfig(AppConfig):
     name = 'sounds_app'
 
     def ready(self):
-        from .signals import delete_sound_file
+        from .signals import delete_sound_file, delete_sound_file_info
