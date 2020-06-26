@@ -123,5 +123,5 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class SoundsSerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = Sound
-        fields = ['']

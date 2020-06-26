@@ -24,8 +24,6 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return f"{self.email} - {self.username}"
 
-    #file_name = models.CharField(max_length=200, unique=True)
-
 
 class SoundFile(models.Model):
     file_format = models.CharField(max_length=5, null=False)
@@ -51,6 +49,7 @@ class Sound(models.Model):
         SoundFile, on_delete=models.CASCADE, null=False)
     genres = models.ForeignKey(
         Genre, null=True, on_delete=models.SET_NULL, related_name='sounds')
+    indexes = [models.Index(fields=['title'])]
 
     def __str__(self):
         return f"{self.title} - {self.uploaded_by}"

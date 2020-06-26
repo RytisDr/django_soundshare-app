@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .api.account import registration, password_reset, password_reset_confirm, delete_account
-from .api.sounds import post_sound, remove_sound, favorite_sound, unfavorite_sound, get_sounds, get_single_sound
+from .api.sounds import post_sound, remove_sound, favorite_sound, unfavorite_sound, get_single_sound, SoundList
 # from .api import TodoList, TodoDetail
 
 app_name = 'sounds_app'
@@ -13,7 +13,7 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('v1/account/', include('rest_auth.urls')),
     path('v1/account/delete/', delete_account, name="delete_account"),
-    path('v1/sounds/', get_sounds, name='get_sounds'),
+    path('v1/sounds', SoundList.as_view(), name='SoundList'),
     path('v1/sounds/<int:pk>/', get_single_sound, name='get_sounds'),
     path('v1/sounds/add/', post_sound, name='post_sound'),
     path('v1/sounds/remove/', remove_sound, name='remove_sound'),

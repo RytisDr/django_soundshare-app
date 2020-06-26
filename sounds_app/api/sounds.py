@@ -7,14 +7,20 @@ from rest_framework.parsers import FormParser, MultiPartParser, MultiPartParserE
 from django.core.files.storage import FileSystemStorage
 import os
 from django.db import transaction
+from ..models import Sound
 
 
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def get_sounds(request):
-    data = {}
-    #serializer = SoundsSerializer(data=required.data)
-    return Response(data)
+class SoundList(generics.ListAPIView):
+    queryset = Sound.objects.all()
+    serializer_class = SoundsSerializer
+    permission_classes = [AllowAny]
+    """ def get_queryset(self):
+    queryset = Sound.objects.all()
+    #title = self.request.query_params.get('title', None)
+    # print(self.context.get("data"))
+    # if title is not None:
+    #queryset = queryset.filter(purchaser__username=username)
+    return queryset """
 
 
 @api_view(['GET'])
