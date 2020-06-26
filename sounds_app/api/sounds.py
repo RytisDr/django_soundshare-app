@@ -11,16 +11,15 @@ from ..models import Sound
 
 
 class SoundList(generics.ListAPIView):
-    queryset = Sound.objects.all()
     serializer_class = SoundsSerializer
     permission_classes = [AllowAny]
-    """ def get_queryset(self):
-    queryset = Sound.objects.all()
-    #title = self.request.query_params.get('title', None)
-    # print(self.context.get("data"))
-    # if title is not None:
-    #queryset = queryset.filter(purchaser__username=username)
-    return queryset """
+
+    def get_queryset(self):
+        queryset = Sound.objects.all().order_by('-created_at')
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            queryset = queryset.filter(title__icontains=query)
+        return queryset
 
 
 @api_view(['GET'])

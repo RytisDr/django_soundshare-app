@@ -49,6 +49,7 @@ class Sound(models.Model):
         SoundFile, on_delete=models.CASCADE, null=False)
     genres = models.ForeignKey(
         Genre, null=True, on_delete=models.SET_NULL, related_name='sounds')
+    created_at = models.DateTimeField(auto_now_add=True)
     indexes = [models.Index(fields=['title'])]
 
     def __str__(self):
