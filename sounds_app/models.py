@@ -28,7 +28,8 @@ class UserProfile(AbstractUser):
 class SoundFile(models.Model):
     file_format = models.CharField(max_length=5, null=False)
     file_name = models.CharField(max_length=50, unique=True, null=False)
-    file = models.FileField(upload_to='sounds', default=None, null=False)
+    file = models.FileField(upload_to='sounds',
+                            default=None, null=False)
 
     def __str__(self):
         return f"{self.id} --- {self.file_name}"

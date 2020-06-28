@@ -6,6 +6,7 @@ import django_rq
 import os
 import uuid
 from django.db import transaction
+from django.conf import settings
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -96,7 +97,7 @@ class SoundFileSerializer(serializers.ModelSerializer):
         file_name_original = self.validated_data['file'].name
         file_format = os.path.splitext(file_name_original)[1]
         file_name_uuid = uuid.uuid4().hex + file_format
-        self.validated_data['file'].name = file_name_uuid + file_format
+        self.validated_data['file'].name = file_name_uuid
         file_obj = self.validated_data['file']
 
         model = SoundFile(file=file_obj, file_name=file_name_uuid,
@@ -121,7 +122,28 @@ class GenreSerializer(serializers.ModelSerializer):
             return model
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'username']
+
+
+class FileNameSerializer(serializers.ModelSerializer):
+    file = serializers.SerializerMethodField('get_file_url')
+
+    class Meta:
+        fields = '__all__'
+        model = SoundFile
+
+    def get_file_url(self, obj):
+        return self.context['request'].build_absolute_uri(obj.file.url)
+
+
 class SoundsSerializer(serializers.ModelSerializer):
+    sound_file = FileNameSerializer(read_only=True)
+    genres = GenreSerializer(read_only=True)
+    uploaded_by = UserSerializer(read_only=True)
+
     class Meta:
         fields = '__all__'
         model = Sound

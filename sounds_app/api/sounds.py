@@ -22,10 +22,19 @@ class SoundList(generics.ListAPIView):
         return queryset
 
 
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def get_single_sound(request):
-    return Response("Single Sound")
+class SoundDetail(generics.RetrieveAPIView):
+    queryset = Sound.objects.all()
+    serializer_class = SoundsSerializer
+    permission_classes = [AllowAny]
+
+
+class UsersSounds(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = SoundsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Sound.objects.filter(uploaded_by=self.request.user)
+        return queryset
 
 
 @api_view(['POST'])
