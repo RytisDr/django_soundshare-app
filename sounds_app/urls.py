@@ -15,7 +15,6 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('v1/account/', include('rest_auth.urls')),
     path('v1/account/delete/', delete_account, name="delete_account"),
-    path('v1/account/sounds/', UsersSounds.as_view(), name="users_sounds"),
     path('v1/sounds', SoundList.as_view(), name='get_sounds'),
     path('v1/sounds/<int:pk>/', SoundDetail.as_view(), name='get_sound'),
     path('v1/sounds/add/', post_sound, name='post_sound'),

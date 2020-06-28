@@ -17,8 +17,11 @@ class SoundList(generics.ListAPIView):
     def get_queryset(self):
         queryset = Sound.objects.all().order_by('-created_at')
         query = self.request.query_params.get('query', None)
+        userId = self.request.query_params.get('userId', None)
         if query is not None:
             queryset = queryset.filter(title__icontains=query)
+        if userId is not None:
+            queryset = queryset.filter(uploaded_by=userId)
         return queryset
 
 
@@ -30,10 +33,10 @@ class SoundDetail(generics.RetrieveAPIView):
 
 class UsersSounds(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SoundsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
-        queryset = Sound.objects.filter(uploaded_by=self.request.user)
+        queryset = Sound.objects.filter(uploaded_by=2)
         return queryset
 
 

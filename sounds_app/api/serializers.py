@@ -147,3 +147,13 @@ class SoundsSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Sound
+
+
+class UsersSoundsSerializers(serializers.ModelSerializer):
+    sound_file = FileNameSerializer(read_only=True)
+    genres = GenreSerializer(read_only=True)
+    uploaded_by = UserSerializer(read_only=True)
+
+    class Meta:
+        fields = '__all__'
+        model = Sound
