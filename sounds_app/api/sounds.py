@@ -81,12 +81,6 @@ def post_sound(request, format=None):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def remove_sound(request):
-    return Response("Remove a sound here")
-
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def favorite_sound(request):
     return Response("Favorite a sound here")
 
@@ -95,3 +89,17 @@ def favorite_sound(request):
 @permission_classes([IsAuthenticated])
 def unfavorite_sound(request):
     return Response("Unfavorite a sound here")
+
+
+class RemoveSound(generics.DestroyAPIView):
+    queryset = Sound.objects.all()
+    serializer_class = SoundsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.uploaded_by == request.user:
+            self.perform_destroy(instance)
+            return Response({"response": "Sound has been removed."})
+        else:
+            return Response({"response": "Could not be removed."})
